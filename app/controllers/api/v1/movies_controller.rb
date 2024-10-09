@@ -1,11 +1,13 @@
 class Api::V1::MoviesController < ApplicationController
   def index
-    movie = params[:movie]
-
     conn = Faraday.new(url: "https://api.themoviedb.org") do |faraday|
-      faraday.headers["Authorization"] = Rails.application.credentials.tmdb[:key]
+      faraday.params[:api_key] = Rails.application.credentials.dig(:tmdb, :key)
     end
-    response = conn.get("movie/top_rated")
-    render json: MovieSerializer.format_movie_list(movie)
+    var = Rails.application.credentials.dig(:tmdb, :key)
+    response = conn.get("/3/movie/top_rated")
+    # binding.pry
+    movies = JSON.parse(response.body, symbolize_names: true)[:results].first(20)
+
+    render json: MovieSerializer.format_movie_list(movies)
   end
 end
