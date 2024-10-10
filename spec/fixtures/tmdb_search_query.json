@@ -1,0 +1,44 @@
+{
+  "data": [
+      {
+          "id": "122",
+          "type": "movie",
+          "attributes": {
+              "title": "The Lord of the Rings: The Return of the King",
+              "vote_average": 8.482
+          }
+      },
+      {
+          "id": "120",
+          "type": "movie",
+          "attributes": {
+              "title": "The Lord of the Rings: The Fellowship of the Ring",
+              "vote_average": 8.416
+          }
+      },
+      {
+          "id": "121",
+          "type": "movie",
+          "attributes": {
+              "title": "The Lord of the Rings: The Two Towers",
+              "vote_average": 8.399
+          }
+      },
+      {
+          "id": "839033",
+          "type": "movie",
+          "attributes": {
+              "title": "The Lord of the Rings: The War of the Rohirrim",
+              "vote_average": 0.0
+          }
+      },
+      {
+          "id": "123",
+          "type": "movie",
+          "attributes": {
+              "title": "The Lord of the Rings",
+              "vote_average": 6.588
+          }
+      }
+    ]
+  }
