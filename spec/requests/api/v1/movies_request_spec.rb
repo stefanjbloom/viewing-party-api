@@ -38,7 +38,7 @@ RSpec.describe "Movies API", type: :request do
         'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
         'User-Agent'=>'Faraday v2.10.1'
           }).
-        to_return(status: 200, body: json_response, headers: {})
+        to_return(status: 200, body: json_response, headers: {}
         
         get "/api/v1/movies?query=The%20Lord%20of%20the%20Rings"
 

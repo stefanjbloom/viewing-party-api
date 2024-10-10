@@ -3,6 +3,10 @@ class Api::V1::MoviesController < ApplicationController
     conn = Faraday.new(url: "https://api.themoviedb.org") do |faraday|
       faraday.params[:api_key] = Rails.application.credentials.dig(:tmdb, :key)
     end
+    
+    if params[:query].blank?
+      return render json: { message: "Please enter a search query", status: 422 }, status: :unprocessable_entity
+    end
 
     if params[:query].present?
       response = conn.get("/3/search/movie") do |req|
