@@ -15,12 +15,12 @@ class MovieGateway
     end
   end
 
-  def self.show_movie_details(movie)
+  def self.show_movie_details(movie_id)
     my_api_key = Rails.application.credentials.dig(:tmdb, :key)
-    response = conn.get("/v1/movies/#{movie.id}?api_key=#{my_api_key}&append_to_response=reviews,credits")
+    response = conn.get("/3/movie/#{movie_id}?api_key=#{my_api_key}&append_to_response=reviews,credits")
 
     json = JSON.parse(response.body, symbolize_names: true)
-
+    movie_obj = Movie.new(json)
+    movie_obj.movie_poro_response
   end
-  
 end

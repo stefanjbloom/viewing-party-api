@@ -71,15 +71,19 @@ RSpec.describe "Movies API", type: :request do
       movie = json[:data]
 
       expect(movie[:id]).to eq(157336)
+      expect(movie[:type]).to eq("movie")
+      expect(movie[:attributes]).to be_a(Hash)
       expect(movie[:attributes][:title]).to eq("Interstellar")
-      expect(movie[:attributes][:release_year]).to eq("2014")
+      expect(movie[:attributes][:release_year]).to eq(2014)
       expect(movie[:attributes][:vote_average]).to eq(8.40)
-      expect(movie[:attributes][:runtime]).to eq("10 hours, 10 minutes")
+      expect(movie[:attributes][:runtime]).to eq("2 hours, 49 minutes")
       expect(movie[:attributes][:genres]).to eq(["Adventure", "Drama", "Science Fiction"])
       expect(movie[:attributes][:summary]).to eq("The adventures of a group of explorers...")
       expect(movie[:attributes][:cast].size).to eq(10)
-      expect(movie[:attributes][:total_reviews]).to eq(100)
+      expect(movie[:attributes][:cast]).to be_a(Array)
+      expect(movie[:attributes][:total_reviews]).to eq(16)
       expect(movie[:attributes][:reviews].size).to eq(5)
+      expect(movie[:attributes][:reviews]).to be_a(Array)
     end
   end
 

@@ -1,5 +1,6 @@
 class Movie
-  attr_reader :title,
+  attr_reader :id,
+              :title,
               :release_year,
               :vote_average,
               :runtime,
@@ -10,6 +11,7 @@ class Movie
               :reviews
 
   def initialize(movie_data)
+    @id = movie_data[:id]
     @title = movie_data[:original_title]
     @release_year = convert_year(movie_data[:release_date])
     @vote_average = movie_data[:vote_average]
@@ -17,11 +19,33 @@ class Movie
     @genres = array_genres(movie_data[:genres])
     @summary = movie_data[:overview]
     @cast = array_cast(movie_data[:credits][:cast]).first(10)
-    @total_reviews = movie_data[:contents][:total_results]
-    @reviews = array_reviews(movie_data[:contents][:results])
+    @total_reviews = movie_data[:reviews][:total_results]
+    # binding.pry
+    @reviews = array_reviews(movie_data[:reviews][:results]).first(5)
+  end
+
+  def movie_poro_response
+    {
+      data: {
+        id: @id,
+        type: "movie",
+        attributes: {
+          title: @title,
+          release_year: @release_year,
+          vote_average: @vote_average,
+          runtime: @runtime,
+          genres: @genres,
+          summary: @summary,
+          cast: @cast,
+          total_reviews: @total_reviews,
+          reviews: @reviews
+        }
+      }
+    }
   end
 
   private
+
   def convert_year(release_year)
     release_year.split("-").first.to_i
   end
@@ -37,10 +61,10 @@ class Movie
   end
 
   def array_cast(cast_members)
-    cast_members.map { |cast_member| {character: cast_member[:character], actor: cast_member[:name]}}
+    cast_members.map { |cast_member| { character: cast_member[:character], actor: cast_member[:name] }}
   end
 
   def array_reviews(reviewers)
-    reviewers.map { |reviewer| {author: reviewer[:author], review: reviewer[:content]}}
+    reviewers.map { |reviewer| {author: reviewer[:author], review: reviewer[:content]}} if reviewers
   end
 end

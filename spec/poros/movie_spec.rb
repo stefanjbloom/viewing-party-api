@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Movie do
-  it 'initializes with correctly parsed attributes' do
-    movie_data = {
+  let(:movie_data) do
+    {
+      id: 157336,
       original_title: "Interstellar",
       release_date: "2014-11-05",
       vote_average: 8.4,
@@ -16,7 +17,7 @@ RSpec.describe Movie do
           {character: "Murph", name: "Jessica Chastain"}
         ]
       },
-      contents: {
+      reviews: {
         total_results: 5,
         results: [
           {author: "corgiman", content: "test1"},
@@ -27,7 +28,8 @@ RSpec.describe Movie do
         ]
       }
     }
-
+  end
+  it 'initializes with correctly parsed attributes by calling private methods' do
     movie = Movie.new(movie_data)
 
     expect(movie.title).to eq("Interstellar")
@@ -44,6 +46,38 @@ RSpec.describe Movie do
       {author: "corgilady", review: "Ptest2"}, {author: "corgiboy", review: "Ptest3"},
       {author: "corgigal", review: "Ptest4"},{author: "corgo", review: "Ptest5"}])
   end
-end
 
-# POTENTIAL FOR REFACTOR INTO MULTIPLE TESTS INSTEAD OF ONE HUGE FUCKOFF TEST
+  it '#movie_poro_response will render correct response hash format to gateway' do
+    movie = Movie.new(movie_data)
+
+    response = {
+      data: {
+        id: 157336,
+        type: "movie",
+        attributes: {
+          title: "Interstellar",
+          release_year: 2014,
+          vote_average: 8.4,
+          runtime: "2 hours, 49 minutes",
+          genres: ["Adventure", "Drama", "Science Fiction"],
+          summary: "A group of explorers...",
+          cast: [
+            { character: "Cooper", actor: "Matthew McConaughey" },
+            { character: "Brand", actor: "Anne Hathaway" },
+            { character: "Murph", actor: "Jessica Chastain" }
+          ],
+          total_reviews: 5,
+          reviews: [
+            { author: "corgiman", review: "test1" },
+            { author: "corgilady", review: "Ptest2" },
+            { author: "corgiboy", review: "Ptest3" },
+            { author: "corgigal", review: "Ptest4" },
+            { author: "corgo", review: "Ptest5" }
+          ]
+        }
+      }
+    }
+
+    expect(movie.movie_poro_response).to eq(response)
+  end
+end
