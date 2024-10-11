@@ -65,6 +65,6 @@ class Movie
   end
 
   def array_reviews(reviewers)
-    reviewers.map { |reviewer| {author: reviewer[:author], review: reviewer[:content]}} if reviewers
+    reviewers.map { |reviewer| {author: reviewer[:author], review: reviewer[:content]}}
   end
 end

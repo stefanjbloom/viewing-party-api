@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe "Movies API", type: :request do
   describe "happy paths" do
-    it "#index can retrieve 20 top-rated movies" do
+    it "#index can retrieve 20 top-rated movies by calling #get_top_rated_movies" do
       api_key = Rails.application.credentials.dig(:tmdb, :key)
       json_response = File.read('spec/fixtures/tmdb_movie_query.json')
       stub_request(:get, "https://api.themoviedb.org/3/movie/top_rated?api_key=#{api_key}").
@@ -29,7 +29,7 @@ RSpec.describe "Movies API", type: :request do
       end
     end
 
-    it '#index can retrieve movies based on search query param' do
+    it '#index can retrieve movies based on search query param by calling #search_movies' do
       api_key = Rails.application.credentials.dig(:tmdb, :key)
       json_response = File.read('spec/fixtures/tmdb_search_query.json')
       stub_request(:get, "https://api.themoviedb.org/3/search/movie?query=The%20Lord%20of%20the%20Rings&api_key=#{api_key}").
