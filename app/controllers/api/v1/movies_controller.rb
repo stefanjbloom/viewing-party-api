@@ -1,15 +1,9 @@
 class Api::V1::MoviesController < ApplicationController
   def index
-    conn = Faraday.new(url: "https://api.themoviedb.org") do |faraday|
-      faraday.params[:api_key] = Rails.application.credentials.dig(:tmdb, :key)
-    end
-
     if params[:query].blank?
-      response = conn.get("/3/movie/top_rated")
+      response = MovieGateway.get_top_rated_movies
     else params[:query].present?
-      response = conn.get("/3/search/movie") do |req|
-        req.params[:query] = params[:query]
-      end
+      response = MovieGateway.search_movies(params[:query])
     end
 
     massaged_response = JSON.parse(response.body, symbolize_names: true)
@@ -24,7 +18,8 @@ class Api::V1::MoviesController < ApplicationController
   end
 
   def show
-    
+    movie = MovieGateway.show_movie_details(params[:id])
+    render json: 
   end
 end
 # Movie Details
@@ -41,6 +36,7 @@ end
 # List the first 10 cast members IMDB(characters & actors) cast[:character = name, :actor =actor.name]
 # Count the total reviews total_reviews[:vote_count]
 # List of first 5 reviews (author and review) 
+
 # Include the movie’s ID (in the Movie DB API system, not your application) in the path
 # Note: Retrieving this information from the Movie DB API could take up to 3 different network requests (unless you find a shortcut!)
 # Example JSON response:
