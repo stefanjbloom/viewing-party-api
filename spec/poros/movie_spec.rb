@@ -33,15 +33,17 @@ RSpec.describe Movie do
     expect(movie.title).to eq("Interstellar")
     expect(movie.release_year).to eq(2014)
     expect(movie.vote_average).to eq(8.4)
-    expect(movie.runtime).to eq("2 hours, 10 minutes")
+    expect(movie.runtime).to eq("2 hours, 49 minutes")
     expect(movie.genres).to eq(["Adventure", "Drama", "Science Fiction"])
     expect(movie.summary).to eq("A group of explorers...")
     expect(movie.cast).to eq([{character: "Cooper", actor: "Matthew McConaughey"}, {character: "Brand", actor: "Anne Hathaway"}, 
       {character: "Murph", actor: "Jessica Chastain"}])
-    expect(movie.cast.count).to eq(10)
-    expect(movie.total_reviews).to eq(16)
+    expect(movie.cast.count).to eq(3)
+    expect(movie.total_reviews).to eq(5)
     expect(movie.reviews).to eq([{author: "corgiman", review: "test1"},
       {author: "corgilady", review: "Ptest2"}, {author: "corgiboy", review: "Ptest3"},
       {author: "corgigal", review: "Ptest4"},{author: "corgo", review: "Ptest5"}])
   end
 end
+
+# POTENTIAL FOR REFACTOR INTO MULTIPLE TESTS INSTEAD OF ONE HUGE FUCKOFF TEST
