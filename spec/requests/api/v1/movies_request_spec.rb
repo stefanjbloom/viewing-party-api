@@ -54,10 +54,37 @@ RSpec.describe "Movies API", type: :request do
         end
       end
     end
-  # end
 
-  describe "sad paths" do
-    it '#index returns top rated movies if ?query=<nothing provided by user>' do
+    it '#find can return details of a single movie by id' do
+      api_key = Rails.application.credentials.dig(:tmdb, :key)
+      json_response = File.read('spec/fixtures/tmdb_find_query.json')
+      stub_request(:get, "https://api.themoviedb.org/3/movie/157336?api_key=#{api_key}").
+        with(
+          headers: {
+        'Accept'=>'*/*',
+        'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+        'User-Agent'=>'Faraday v2.10.1'
+          }).
+        to_return(status: 200, body: json_response, headers: {})
+
+      show "api/v1/movies/#{movie.id}"
+
+      json = JSON.parse(response.body, symbolize_names: true)
+      movie = json[:data]
+
+      expect(movie[:id]).to eq(157336)
+      expect(movie[:attributes][:title]).to eq("Interstellar")
+      expect(movie[:attributes][:release_year]).to eq("2014")
+      expect(movie[:attributes][:vote_average]).to eq(8.40)
+      expect(movie[:attributes][:runtime]).to eq("10 hours, 10 minutes")
+      expect(movie[:attributes][:genres]).to eq(["Adventure", "Drama", "Science Fiction"])
+      expect(movie[:attributes][:summary]).to eq("The adventures of a group of explorers...")
+      expect(movie[:attributes][:cast].size).to eq(10)
+      expect(movie[:attributes][:total_reviews]).to eq(100)
+      expect(movie[:attributes][:reviews].size).to eq(5)
+    end
+    describe "sad paths" do
+      it '#index returns top rated movies if ?query=<nothing provided by user>' do
       api_key = Rails.application.credentials.dig(:tmdb, :key)
       json_response = File.read('spec/fixtures/tmdb_movie_query.json')
       stub_request(:get, "https://api.themoviedb.org/3/movie/top_rated?api_key=#{api_key}").
