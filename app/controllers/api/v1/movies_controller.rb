@@ -1,15 +1,9 @@
 class Api::V1::MoviesController < ApplicationController
   def index
-    conn = Faraday.new(url: "https://api.themoviedb.org") do |faraday|
-      faraday.params[:api_key] = Rails.application.credentials.dig(:tmdb, :key)
-    end
-
     if params[:query].blank?
-      response = conn.get("/3/movie/top_rated")
+      response = MovieGateway.get_top_rated_movies
     else params[:query].present?
-      response = conn.get("/3/search/movie") do |req|
-        req.params[:query] = params[:query]
-      end
+      response = MovieGateway.search_movies(params[:query])
     end
 
     massaged_response = JSON.parse(response.body, symbolize_names: true)
@@ -21,5 +15,10 @@ class Api::V1::MoviesController < ApplicationController
     end
 
     render json: MovieSerializer.format_movie_list(movies)
+  end
+
+  def show
+    movie_data = MovieGateway.show_movie_details(params[:id])
+    render json: movie_data
   end
 end
