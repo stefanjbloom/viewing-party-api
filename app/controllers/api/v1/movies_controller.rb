@@ -22,6 +22,10 @@ class Api::V1::MoviesController < ApplicationController
 
     render json: MovieSerializer.format_movie_list(movies)
   end
+
+  def show
+    
+  end
 end
 # Movie Details
 # This endpoint is NOT authenticated. This endpoint should:
