@@ -2,7 +2,7 @@ class Api::V1::ViewingPartiesController < ApplicationController
   before_action: authenticate_api_key
 
   def create
-
+    
   end
 
   private

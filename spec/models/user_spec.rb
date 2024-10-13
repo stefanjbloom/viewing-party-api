@@ -9,4 +9,10 @@ RSpec.describe User, type: :model do
     it { should have_secure_password }
     it { should have_secure_token(:api_key) }
   end
+
+  describe "associations" do
+    it { should have_many(:viewing_party_users) }
+    it { should have_many(:hosted_viewing_parties) }
+    it { should have_many(:invited_viewing_parties) }
+  end
 end
