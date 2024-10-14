@@ -90,13 +90,12 @@ RSpec.describe "Users API", type: :request do
 
   describe "Retrieve User Profile" do
     before(:each) do
-      api_key = Rails.application.credentials.dig(:tmdb, :key)
       @user = User.create!(
         name: 'Leo DiCaprio', 
         username: 'leo_real_verified', 
         password: 'password', 
         password_confirmation: 'password', 
-        api_key: api_key
+        api_key: "test_key"
       )
       
       @party_hosted = ViewingParty.create!(

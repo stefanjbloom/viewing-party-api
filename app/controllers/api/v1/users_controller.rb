@@ -12,6 +12,20 @@ class Api::V1::UsersController < ApplicationController
     render json: UserSerializer.format_user_list(User.all)
   end
 
+  def show
+    user = User.find_by(id: params[:id])
+
+    if user.nil?
+      return render json: { error: "User not found" }, status: :not_found
+    end
+
+    if user.api_key != params[:api_key]
+      return render json: { error: "Invalid API Key" }, status: :unauthorized
+    end
+
+    render json: UserSerializer.format_user_profile(user), status: :ok
+  end
+
   private
 
   def user_params
