@@ -87,4 +87,50 @@ RSpec.describe "Users API", type: :request do
       expect(json[:data][0][:attributes]).to_not have_key(:api_key)
     end
   end
+
+  describe "Retrieve User Profile" do
+    before(:each) do
+      @user = User.create!(
+        name: 'Leo DiCaprio', 
+        username: 'leo_real_verified', 
+        password: 'password', 
+        password_confirmation: 'password', 
+        api_key: "test_key"
+      )
+      
+      @party_hosted = ViewingParty.create!(
+        name: 'Titanic Watch Party', 
+        start_time: '2025-05-01 10:00:00', 
+        end_time: '2025-05-01 14:30:00', 
+        movie_id: 597, 
+        movie_title: 'Titanic', 
+        host: @user
+      )
+      
+      @invitee = User.create!(
+        name: 'Tom', 
+        username: 'tom_tom', 
+        password: 'password', 
+        password_confirmation: 'password', 
+        api_key: "key"
+      )
+      
+      ViewingPartyUser.create!(viewing_party: @party_hosted, user: @invitee)
+    end
+
+    it "#show requires an api key then renders user profile" do
+      get "/api/v1/users/#{@user.id}", params: { api_key: @user.api_key }
+
+      expect(response).to have_http_status(:ok)
+
+      json = JSON.parse(response.body, symbolize_names: true)[:data]
+
+      expect(json[:id]).to eq(@user.id.to_s)
+      expect(json[:attributes][:name]).to eq(@user.name)
+      expect(json[:attributes][:username]).to eq(@user.username)
+      expect(json[:attributes][:hosted_viewing_parties].size).to eq(1)
+      expect(json[:attributes][:hosted_viewing_parties].first[:name]).to eq('Titanic Watch Party')
+      expect(json[:attributes][:invited_viewing_parties].size).to eq(1)
+    end
+  end
 end
