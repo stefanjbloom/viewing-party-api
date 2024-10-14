@@ -34,4 +34,39 @@ RSpec.describe "Viewing Party Invitations Requests", type: :request do
         {id: @invitee3.id, name: @invitee3.name, username: @invitee3.username})
     end
   end
+
+  describe "sad paths" do
+    it "#create can handle invalid viewing party ID" do
+      post "/api/v1/viewing_parties/53478543789/invite", params: {
+        api_key: @host.api_key,
+        invitees_user_id: @invitee3.id
+      }
+      
+      expect(response).to have_http_status(:not_found)
+      unauth_response = JSON.parse(response.body, symbolize_names: true)
+      expect(unauth_response[:error]).to eq("Invalid viewing party ID")
+    end
+
+    it "#create can handle invalid API key" do
+      post "/api/v1/viewing_parties/#{@existing_viewing_party.id}/invite", params: {
+        api_key: "wrooong",
+        invitees_user_id: @invitee3.id
+      }
+
+      expect(response).to have_http_status(:unauthorized)
+      unauth_response = JSON.parse(response.body, symbolize_names: true)
+      expect(unauth_response[:error]).to eq("Invalid API key")
+    end
+
+    it "#create can handle invalid user ID" do
+      post "/api/v1/viewing_parties/#{@existing_viewing_party.id}/invite", params: {
+        api_key: @host.api_key,
+        invitees_user_id: 4000000094291
+      }
+
+      expect(response).to have_http_status(:not_found)
+      unauth_response = JSON.parse(response.body, symbolize_names: true)
+      expect(unauth_response[:error]).to eq("Invalid user ID")
+    end
+  end
 end
